@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Borno Admin | Professional Control Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/admin-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Auth Overlay -->
+    <div id="authOverlay" class="auth-overlay">
+        <div class="auth-card">
+            <div class="auth-header">
+                <img src="../public/assets/logo.png" alt="Borno Logo" class="auth-logo">
+                <h1>Admin Portal</h1>
+                <p>Secure Access to Borno Management</p>
+            </div>
+            <button id="googleLoginBtn" class="btn-google-auth">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+                Sign in with Google
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Application Wrapper -->
+    <div id="adminApp" class="app-wrapper" style="display: none;">
+        <!-- Top Navigation Bar -->
+        <header class="admin-topbar">
+            <div class="topbar-left">
+                <button id="menuToggle" class="menu-btn"><i class="fa fa-bars"></i></button>
+                <h2 id="currentPageTitle">Dashboard Overview</h2>
+            </div>
+            <div class="topbar-right">
+                <div class="admin-profile">
+                    <span id="adminName">Admin User</span>
+                    <img src="" id="adminAvatar" alt="Avatar">
+                    <button id="logoutBtn" class="btn-logout"><i class="fa fa-sign-out-alt"></i></button>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-layout">
+            <!-- Sidebar Navigation -->
+            <aside class="admin-sidebar" id="adminSidebar">
+                <div class="sidebar-brand">
+                    <img src="../public/assets/logo.png" alt="Borno" class="sidebar-logo">
+                    <span>BORNO ADMIN</span>
+                </div>
+                <nav class="sidebar-menu">
+                    <ul>
+                        <li class="nav-item active" data-page="overview">
+                            <i class="fa fa-th-large"></i> <span>Dashboard</span>
+                        </li>
+                        <li class="nav-item" data-page="products">
+                            <i class="fa fa-book"></i> <span>Products</span>
+                        </li>
+                        <li class="nav-item" data-page="orders">
+                            <i class="fa fa-shopping-bag"></i> <span>Orders</span>
+                        </li>
+                        <li class="nav-item" data-page="categories">
+                            <i class="fa fa-tags"></i> <span>Categories</span>
+                        </li>
+                        <li class="nav-item" data-page="users">
+                            <i class="fa fa-users"></i> <span>Customers</span>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+
+            <!-- Content Area -->
+            <main class="content-area">
+
+                <!-- Overview Page -->
+                <section id="page-overview" class="page active">
+                    <div class="stats-grid">
+                        <div class="stat-card purple">
+                            <div class="stat-content">
+                                <p>Total Revenue</p>
+                                <h2 id="statRevenue">0 Tk</h2>
+                            </div>
+                            <i class="fa fa-wallet"></i>
+                        </div>
+                        <div class="stat-card blue">
+                            <div class="stat-content">
+                                <p>Active Orders</p>
+                                <h2 id="statOrders">0</h2>
+                            </div>
+                            <i class="fa fa-box"></i>
+                        </div>
+                        <div class="stat-card green">
+                            <div class="stat-content">
+                                <p>Total Products</p>
+                                <h2 id="statProducts">0</h2>
+                            </div>
+                            <i class="fa fa-book-open"></i>
+                        </div>
+                        <div class="stat-card orange">
+                            <div class="stat-content">
+                                <p>Total Customers</p>
+                                <h2 id="statUsers">0</h2>
+                            </div>
+                            <i class="fa fa-user-friends"></i>
+                        </div>
+                    </div>
+                    <div class="overview-charts">
+                        <div class="chart-placeholder">
+                            <h3>Recent Activity</h3>
+                            <p>Detailed sales analytics will appear here.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Products Page -->
+                <section id="page-products" class="page">
+                    <div class="page-header">
+                        <h3>Inventory Management</h3>
+                        <div class="header-actions">
+                            <div class="search-box">
+                                <i class="fa fa-search"></i>
+                                <input type="text" id="prodSearch" placeholder="Search products...">
+                            </div>
+                            <button id="addProdBtn" class="btn-add"><i class="fa fa-plus"></i> Add Product</button>
+                        </div>
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Product Name</th>
+                                    <th>Category</th>
+                                    <th>Price</th>
+                                    <th>Stock</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="prodTableBody"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Orders Page -->
+                <section id="page-orders" class="page">
+                    <div class="page-header">
+                        <h3>Order Tracking & Delivery</h3>
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Amount</th>
+                                    <th>Payment</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="orderTableBody"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Categories Page -->
+                <section id="page-categories" class="page">
+                    <div class="page-header">
+                        <h3>Category Management</h3>
+                        <button id="addCatBtn" class="btn-add"><i class="fa fa-plus"></i> New Category</button>
+                    </div>
+                    <div class="cat-grid" id="catGrid"></div>
+                </section>
+
+                <!-- Customers Page -->
+                <section id="page-users" class="page">
+                    <div class="page-header">
+                        <h3>Customer Database</h3>
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Orders</th>
+                                    <th>Date Joined</th>
+                                </tr>
+                            </thead>
+                            <tbody id="userTableBody"></tbody>
+                        </table>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Product Modal -->
+    <div id="prodModal" class="modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="modalTitle">Add Product</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <form id="prodForm">
+                <input type="hidden" id="prodId">
+                <div class="form-group">
+                    <label>Product Name</label>
+                    <input type="text" id="fName" required>
+                </div>
+                <div class="form-group">
+                    <label>Writer/Brand</label>
+                    <input type="text" id="fWriter" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="fCat">
+                            <option value="Book">Book</option>
+                            <option value="Stationary">Stationary</option>
+                            <option value="Gezet">Gezet</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Price (Tk)</label>
+                        <input type="number" id="fPrice" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Image URL</label>
+                    <input type="text" id="fImg">
+                </div>
+                <button type="submit" class="btn-submit">Save Product</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="js/admin-script.js"></script>
+</body>
+</html>
