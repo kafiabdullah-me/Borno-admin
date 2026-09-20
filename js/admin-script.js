@@ -1,6 +1,5 @@
 /**
- * Borno Admin Panel - Pro Logic
- * Integrated with Firebase Auth & Firestore
+ * Borno Admin Panel - Pro Logic (UX Optimized)
  */
 
 const firebaseConfig = {
@@ -52,11 +51,21 @@ auth.onAuthStateChanged(user => {
     }
 });
 
-// --- NAVIGATION & UI ---
+// --- RESPONSIVE MENU LOGIC ---
 menuToggle.addEventListener('click', () => {
     adminSidebar.classList.toggle('open');
 });
 
+// Close sidebar when clicking outside on mobile
+document.addEventListener('click', (e) => {
+    if (window.innerWidth <= 1024 &&
+        !adminSidebar.contains(e.target) &&
+        !menuToggle.contains(e.target)) {
+        adminSidebar.classList.remove('open');
+    }
+});
+
+// --- NAVIGATION ---
 document.querySelectorAll('.nav-item').forEach(item => {
     item.addEventListener('click', () => {
         const page = item.getAttribute('data-page');
@@ -70,51 +79,56 @@ document.querySelectorAll('.nav-item').forEach(item => {
 
         document.getElementById('currentPageTitle').innerText = item.innerText.trim();
 
+        // Auto-close sidebar on mobile after selection
         if (window.innerWidth <= 1024) adminSidebar.classList.remove('open');
     });
 });
 
 // --- OVERVIEW STATS ---
 async function updateOverview() {
-    const pSnap = await db.collection('products').get();
-    const oSnap = await db.collection('orders').get();
-    const cSnap = await db.collection('categories').get();
-    const uSnap = await db.collection('users').get();
+    try {
+        const pSnap = await db.collection('products').get();
+        const oSnap = await db.collection('orders').get();
+        const cSnap = await db.collection('categories').get();
+        const uSnap = await db.collection('users').get();
 
-    document.getElementById('statProducts').innerText = pSnap.size;
-    document.getElementById('statOrders').innerText = oSnap.size;
-    document.getElementById('statCats').innerText = cSnap.size;
-    document.getElementById('statUsers').innerText = uSnap.size;
+        document.getElementById('statProducts').innerText = pSnap.size;
+        document.getElementById('statOrders').innerText = oSnap.size;
+        document.getElementById('statCats').innerText = cSnap.size;
+        document.getElementById('statUsers').innerText = uSnap.size;
 
-    let revenue = 0;
-    oSnap.forEach(doc => revenue += Number(doc.data().total || 0));
-    document.getElementById('statRevenue').innerText = revenue + " Tk";
+        let revenue = 0;
+        oSnap.forEach(doc => revenue += Number(doc.data().total || 0));
+        document.getElementById('statRevenue').innerText = revenue + " Tk";
+    } catch (e) { console.error("Stats error:", e); }
 }
 
 // --- PRODUCT MANAGEMENT ---
 async function loadProducts(filter = '') {
-    const snapshot = await db.collection('products').get();
-    const tbody = document.getElementById('prodTableBody');
-    tbody.innerHTML = '';
+    try {
+        const snapshot = await db.collection('products').get();
+        const tbody = document.getElementById('prodTableBody');
+        tbody.innerHTML = '';
 
-    snapshot.forEach(doc => {
-        const p = doc.data();
-        if (filter && !p.name.toLowerCase().includes(filter.toLowerCase())) return;
+        snapshot.forEach(doc => {
+            const p = doc.data();
+            if (filter && !p.name.toLowerCase().includes(filter.toLowerCase())) return;
 
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td><img src="${p.image || 'assets/placeholder.jpg'}"></td>
-            <td><strong>${p.name}</strong></td>
-            <td>${p.category}</td>
-            <td>${p.price} Tk</td>
-            <td>${p.stock || 'N/A'}</td>
-            <td class="action-btns">
-                <i class="fa fa-edit btn-edit" onclick="editProduct('${doc.id}')"></i>
-                <i class="fa fa-trash btn-delete" onclick="deleteProduct('${doc.id}')"></i>
-            </td>
-        `;
-        tbody.appendChild(row);
-    });
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td><img src="${p.image || 'assets/placeholder.jpg'}"></td>
+                <td><strong style="color:#1e293b">${p.name}</strong></td>
+                <td>${p.category}</td>
+                <td>${p.price} Tk</td>
+                <td>${p.stock || 'N/A'}</td>
+                <td class="action-btns">
+                    <i class="fa fa-edit btn-edit" style="color:#3b82f6; cursor:pointer; margin-right:10px" onclick="editProduct('${doc.id}')"></i>
+                    <i class="fa fa-trash btn-delete" style="color:#ef4444; cursor:pointer" onclick="deleteProduct('${doc.id}')"></i>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+    } catch (e) { console.error(e); }
 }
 
 document.getElementById('prodSearch').addEventListener('input', (e) => {
@@ -174,22 +188,24 @@ window.deleteProduct = async function(id) {
 
 // --- ORDERS MANAGEMENT ---
 async function loadOrders() {
-    const snapshot = await db.collection('orders').get();
-    const tbody = document.getElementById('orderTableBody');
-    tbody.innerHTML = '';
-    snapshot.forEach(doc => {
-        const o = doc.data();
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>#${doc.id.slice(0,6)}</td>
-            <td>${o.customerName}</td>
-            <td>${o.total} Tk</td>
-            <td>COD</td>
-            <td><span class="status-badge">${o.status}</span></td>
-            <td><button class="btn-sm" onclick="updateStatus('${doc.id}')">Update</button></td>
-        `;
-        tbody.appendChild(row);
-    });
+    try {
+        const snapshot = await db.collection('orders').get();
+        const tbody = document.getElementById('orderTableBody');
+        tbody.innerHTML = '';
+        snapshot.forEach(doc => {
+            const o = doc.data();
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>#${doc.id.slice(0,6)}</td>
+                <td>${o.customerName}</td>
+                <td>${o.total} Tk</td>
+                <td>COD</td>
+                <td><span class="status-badge" style="background:#e2e8f0; padding:4px 8px; border-radius:12px; font-size:12px">${o.status}</span></td>
+                <td><button class="btn-sm" style="padding:5px 10px; border:none; border-radius:5px; cursor:pointer" onclick="updateStatus('${doc.id}')">Update</button></td>
+            `;
+            tbody.appendChild(row);
+        });
+    } catch (e) { console.error(e); }
 }
 
 window.updateStatus = async function(id) {
