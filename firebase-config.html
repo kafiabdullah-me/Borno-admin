@@ -1,0 +1,49 @@
+<!--
+  Firebase Shared Config
+  This file should be included in all pages that require Firebase.
+-->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+  import { getFirestore, collection, addDoc, getDocs, doc, setDoc, updateDoc, deleteDoc, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-analytics.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBlQhB3ZcsRWq7evEPntrpNVyyE2Pl7gkk",
+    authDomain: "borno-8c445.firebaseapp.com",
+    projectId: "borno-8c445",
+    storageBucket: "borno-8c445.firebasestorage.app",
+    messagingSenderId: "842315974308",
+    appId: "1:842315974308:web:748ba8da2700c578284831",
+    measurementId: "G-F0CCKD6B12"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const analytics = getAnalytics(app);
+  const provider = new GoogleAuthProvider();
+
+  // Make these available globally for other scripts
+  window.fb = {
+    auth,
+    db,
+    provider,
+    signInWithGoogle: () => signInWithPopup(auth, provider),
+    signOut: () => signOut(auth),
+    onAuthChange: (callback) => onAuthStateChanged(auth, callback),
+    firestore: {
+      collection,
+      addDoc,
+      getDocs,
+      doc,
+      setDoc,
+      updateDoc,
+      deleteDoc,
+      onSnapshot,
+      query,
+      where
+    }
+  };
+</script>
