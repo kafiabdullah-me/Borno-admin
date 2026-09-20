@@ -3,193 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Borno Admin | Professional Control Panel</title>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/admin-style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Borno Admin | Control Center</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="admin-style.css">
+    <script src="firebase-config.html" defer></script>
+    <script src="admin.js" defer></script>
 </head>
-<body>
-
-    <!-- Auth Overlay -->
-    <div id="authOverlay" class="auth-overlay">
-        <div class="auth-card">
-            <div class="auth-header">
-                <img src="../public/assets/logo.png" alt="Borno Logo" class="auth-logo">
-                <h1>Admin Portal</h1>
-                <p>Secure Access to Borno Management</p>
+<body class="admin-body">
+    <div class="admin-wrapper">
+        <!-- Right Side Navigation (Mobile Friendly) -->
+        <nav class="admin-nav" id="adminNav">
+            <div class="nav-header">
+                <span class="nav-logo">Borno Admin</span>
+                <button id="closeNav" class="close-nav-btn">&times;</button>
             </div>
-            <button id="googleLoginBtn" class="btn-google-auth">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
-                Sign in with Google
-            </button>
-        </div>
-    </div>
-
-    <!-- Main Application Wrapper -->
-    <div id="adminApp" class="app-wrapper" style="display: none;">
-        <!-- Top Navigation Bar -->
-        <header class="admin-topbar">
-            <div class="topbar-left">
-                <button id="menuToggle" class="menu-btn"><i class="fa fa-bars"></i></button>
-                <h2 id="currentPageTitle">Dashboard Overview</h2>
+            <ul class="nav-menu">
+                <li><a href="#" class="nav-item active" data-page="dashboard">Dashboard</a></li>
+                <li><a href="#" class="nav-item" data-page="products">Products</a></li>
+                <li><a href="#" class="nav-item" data-page="orders">Orders</a></li>
+                <li><a href="#" class="nav-item" data-page="categories">Categories</a></li>
+                <li><a href="#" class="nav-item" data-page="customers">Customers</a></li>
+                <li><a href="#" class="nav-item" data-page="settings">Settings</a></li>
+            </ul>
+            <div class="nav-footer">
+                <button id="adminLogout" class="logout-btn">Logout</button>
             </div>
-            <div class="topbar-right">
-                <div class="admin-profile">
-                    <span id="adminName">Admin User</span>
-                    <img src="" id="adminAvatar" alt="Avatar">
-                    <button id="logoutBtn" class="btn-logout"><i class="fa fa-sign-out-alt"></i></button>
+        </nav>
+
+        <!-- Main Content Area -->
+        <div class="admin-main">
+            <header class="admin-topbar">
+                <div class="topbar-left">
+                    <button id="openNav" class="mobile-menu-btn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                    </button>
+                    <h1 id="pageTitle">Dashboard</h1>
                 </div>
-            </div>
-        </header>
-
-        <div class="main-layout">
-            <!-- Sidebar Navigation -->
-            <aside class="admin-sidebar" id="adminSidebar">
-                <div class="sidebar-brand">
-                    <img src="../public/assets/logo.png" alt="Borno" class="sidebar-logo">
-                    <span>BORNO ADMIN</span>
+                <div class="topbar-right">
+                    <div class="theme-switcher">
+                        <button data-theme="light" class="theme-dot light"></button>
+                        <button data-theme="dark" class="theme-dot dark active"></button>
+                        <button data-theme="system" class="theme-dot system"></button>
+                    </div>
+                    <div class="user-profile">
+                        <span id="userName">Loading...</span>
+                        <div class="avatar-circle ph"></div>
+                    </div>
                 </div>
-                <nav class="sidebar-menu">
-                    <ul>
-                        <li class="nav-item active" data-page="overview">
-                            <i class="fa fa-th-large"></i> <span>Dashboard</span>
-                        </li>
-                        <li class="nav-item" data-page="products">
-                            <i class="fa fa-book"></i> <span>Products</span>
-                        </li>
-                        <li class="nav-item" data-page="orders">
-                            <i class="fa fa-shopping-bag"></i> <span>Orders</span>
-                        </li>
-                        <li class="nav-item" data-page="categories">
-                            <i class="fa fa-tags"></i> <span>Categories</span>
-                        </li>
-                        <li class="nav-item" data-page="users">
-                            <i class="fa fa-users"></i> <span>Customers</span>
-                        </li>
-                    </ul>
-                </nav>
-            </aside>
+            </header>
 
-            <!-- Content Area -->
-            <main class="content-area">
-
-                <!-- Overview Page -->
-                <section id="page-overview" class="page active">
+            <main class="page-container">
+                <!-- Dashboard Page -->
+                <section id="page-dashboard" class="admin-page active">
                     <div class="stats-grid">
-                        <div class="stat-card purple">
-                            <div class="stat-content">
-                                <p>Total Revenue</p>
-                                <h2 id="statRevenue">0 Tk</h2>
+                        <div class="stat-card">
+                            <div class="stat-info">
+                                <span>Total Revenue</span>
+                                <h2 id="statRevenue">Tk 0</h2>
                             </div>
-                            <i class="fa fa-wallet"></i>
                         </div>
-                        <div class="stat-card blue">
-                            <div class="stat-content">
-                                <p>Active Orders</p>
-                                <h2 id="statOrders">0</h2>
-                            </div>
-                            <i class="fa fa-box"></i>
-                        </div>
-                        <div class="stat-card green">
-                            <div class="stat-content">
-                                <p>Total Products</p>
+                        <div class="stat-card">
+                            <div class="stat-info">
+                                <span>Active Products</span>
                                 <h2 id="statProducts">0</h2>
                             </div>
-                            <i class="fa fa-book-open"></i>
                         </div>
-                        <div class="stat-card orange">
-                            <div class="stat-content">
-                                <p>Total Customers</p>
-                                <h2 id="statUsers">0</h2>
+                        <div class="stat-card">
+                            <div class="stat-info">
+                                <span>Total Orders</span>
+                                <h2 id="statOrders">0</h2>
                             </div>
-                            <i class="fa fa-user-friends"></i>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-info">
+                                <span>Customers</span>
+                                <h2 id="statCustomers">0</h2>
+                            </div>
                         </div>
                     </div>
-                    <div class="overview-charts">
-                        <div class="chart-placeholder">
-                            <h3>Recent Activity</h3>
-                            <p>Detailed sales analytics will appear here.</p>
+                    <div class="dashboard-content">
+                        <div class="table-container">
+                            <h3>Recent Orders</h3>
+                            <table class="admin-table">
+                                <thead>
+                                    <tr><th>Order ID</th><th>Customer</th><th>Amount</th><th>Status</th></tr>
+                                </thead>
+                                <tbody id="recentOrdersTable"></tbody>
+                            </table>
                         </div>
                     </div>
                 </section>
 
                 <!-- Products Page -->
-                <section id="page-products" class="page">
+                <section id="page-products" class="admin-page">
                     <div class="page-header">
-                        <h3>Inventory Management</h3>
-                        <div class="header-actions">
-                            <div class="search-box">
-                                <i class="fa fa-search"></i>
-                                <input type="text" id="prodSearch" placeholder="Search products...">
-                            </div>
-                            <button id="addProdBtn" class="btn-add"><i class="fa fa-plus"></i> Add Product</button>
-                        </div>
+                        <h2>Product Management</h2>
+                        <button id="openProductModal" class="btn-add">+ Add Product</button>
                     </div>
-                    <div class="table-wrapper">
+                    <div class="table-container">
                         <table class="admin-table">
                             <thead>
-                                <tr>
-                                    <th>Image</th>
-                                    <th>Product Name</th>
-                                    <th>Category</th>
-                                    <th>Price</th>
-                                    <th>Stock</th>
-                                    <th>Actions</th>
-                                </tr>
+                                <tr><th>Image</th><th>Name</th><th>Price</th><th>Stock</th><th>Actions</th></tr>
                             </thead>
-                            <tbody id="prodTableBody"></tbody>
+                            <tbody id="productsTable"></tbody>
                         </table>
                     </div>
                 </section>
 
                 <!-- Orders Page -->
-                <section id="page-orders" class="page">
+                <section id="page-orders" class="admin-page">
                     <div class="page-header">
-                        <h3>Order Tracking & Delivery</h3>
+                        <h2>All Orders</h2>
                     </div>
-                    <div class="table-wrapper">
+                    <div class="table-container">
                         <table class="admin-table">
                             <thead>
-                                <tr>
-                                    <th>Order ID</th>
-                                    <th>Customer</th>
-                                    <th>Amount</th>
-                                    <th>Payment</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
-                                </tr>
+                                <tr><th>ID</th><th>Customer</th><th>Total</th><th>Status</th><th>Action</th></tr>
                             </thead>
-                            <tbody id="orderTableBody"></tbody>
+                            <tbody id="allOrdersTable"></tbody>
                         </table>
                     </div>
                 </section>
 
                 <!-- Categories Page -->
-                <section id="page-categories" class="page">
+                <section id="page-categories" class="admin-page">
                     <div class="page-header">
-                        <h3>Category Management</h3>
-                        <button id="addCatBtn" class="btn-add"><i class="fa fa-plus"></i> New Category</button>
+                        <h2>Categories</h2>
+                        <button id="openCatModal" class="btn-add">+ Add Category</button>
                     </div>
-                    <div class="cat-grid" id="catGrid"></div>
+                    <div class="table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr><th>Category Name</th><th>Items</th><th>Actions</th></tr>
+                            </thead>
+                            <tbody id="categoriesTable"></tbody>
+                        </table>
+                    </div>
                 </section>
 
                 <!-- Customers Page -->
-                <section id="page-users" class="page">
+                <section id="page-customers" class="admin-page">
                     <div class="page-header">
-                        <h3>Customer Database</h3>
+                        <h2>Customer Directory</h2>
                     </div>
-                    <div class="table-wrapper">
+                    <div class="table-container">
                         <table class="admin-table">
                             <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Orders</th>
-                                    <th>Date Joined</th>
-                                </tr>
+                                <tr><th>Name</th><th>Phone</th><th>District</th><th>Joined</th></tr>
                             </thead>
-                            <tbody id="userTableBody"></tbody>
+                            <tbody id="customersTable"></tbody>
                         </table>
+                    </div>
+                </section>
+
+                <!-- Settings Page -->
+                <section id="page-settings" class="admin-page">
+                    <div class="settings-grid">
+                        <div class="settings-card">
+                            <h3>Website Config</h3>
+                            <div class="setting-field">
+                                <label>Site Name</label>
+                                <input type="text" id="setSiteName">
+                            </div>
+                            <div class="setting-field">
+                                <label>Delivery Charge (Tk)</label>
+                                <input type="number" id="setDeliveryCharge">
+                            </div>
+                            <button id="saveSettings" class="btn-save">Save Changes</button>
+                        </div>
                     </div>
                 </section>
             </main>
@@ -197,48 +178,58 @@
     </div>
 
     <!-- Product Modal -->
-    <div id="prodModal" class="modal">
-        <div class="modal-card">
-            <div class="modal-header">
-                <h3 id="modalTitle">Add Product</h3>
-                <span class="close-modal">&times;</span>
-            </div>
-            <form id="prodForm">
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <h3 id="modalTitle">Add Product</h3>
+            <form id="productForm">
                 <input type="hidden" id="prodId">
                 <div class="form-group">
                     <label>Product Name</label>
-                    <input type="text" id="fName" required>
+                    <input type="text" id="prodName" required>
                 </div>
                 <div class="form-group">
-                    <label>Writer/Brand</label>
-                    <input type="text" id="fWriter" required>
+                    <label>Category</label>
+                    <input type="text" id="prodCat" required>
                 </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Category</label>
-                        <select id="fCat">
-                            <option value="Book">Book</option>
-                            <option value="Stationary">Stationary</option>
-                            <option value="Gezet">Gezet</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Price (Tk)</label>
-                        <input type="number" id="fPrice" required>
-                    </div>
+                <div class="form-group">
+                    <label>Price (Tk)</label>
+                    <input type="number" id="prodPrice" required>
+                </div>
+                <div class="form-group">
+                    <label>Stock</label>
+                    <input type="number" id="prodStock" required>
                 </div>
                 <div class="form-group">
                     <label>Image URL</label>
-                    <input type="text" id="fImg">
+                    <input type="text" id="prodImg">
                 </div>
-                <button type="submit" class="btn-submit">Save Product</button>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="prodDesc"></textarea>
+                </div>
+                <div class="modal-btns">
+                    <button type="button" id="closeProductModal" class="btn-cancel">Cancel</button>
+                    <button type="submit" class="btn-confirm">Save Product</button>
+                </div>
             </form>
         </div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="js/admin-script.js"></script>
+    <!-- Category Modal -->
+    <div id="categoryModal" class="modal">
+        <div class="modal-content">
+            <h3>Add Category</h3>
+            <form id="categoryForm">
+                <div class="form-group">
+                    <label>Category Name</label>
+                    <input type="text" id="catName" required>
+                </div>
+                <div class="modal-btns">
+                    <button type="button" id="closeCatModal" class="btn-cancel">Cancel</button>
+                    <button type="submit" class="btn-confirm">Save Category</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
 </html>
